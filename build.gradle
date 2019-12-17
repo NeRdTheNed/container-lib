@@ -39,7 +39,7 @@ dependencies {
         exclude (group: "net.fabricmc", module: "fabric-loader")
         exclude (group: "net.fabricmc.fabric-api")
     }
-	
+
     compileOnly("org.checkerframework:checker-qual:3.0.1")
 }
 
@@ -66,3 +66,15 @@ runClient {
 }
 
 tasks.withType(JavaCompile) { options.setEncoding("UTF-8") }
+
+tasks.getByName("githubRelease").dependsOn(build)
+
+githubRelease {
+	token = getProperty("github_api_key")
+	owner "ninjaphenix"
+	repo "container-lib"
+	tagName "v${project.mod_version}"
+	targetCommitish project.minecraft_version
+	releaseAssets jar.destinationDirectory.asFile.get().listFiles()
+	overwrite true
+}
