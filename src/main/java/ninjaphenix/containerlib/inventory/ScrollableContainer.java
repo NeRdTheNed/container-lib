@@ -23,7 +23,16 @@ public class ScrollableContainer extends Container
 	@Environment(EnvType.CLIENT) private String searchTerm = "";
 	@Environment(EnvType.CLIENT) private Integer[] unsortedToSortedSlotMap;
 
-	public ScrollableContainer(int syncId, SlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text containerName)
+	/**
+	 * Creates a ScrollableContainer allowing for custom slots to be defined.
+	 *
+	 * @param syncId Sync ID
+	 * @param slotFactory The method which returns new (custom) slot objects.
+	 * @param playerInventory The player's inventory
+	 * @param inventory The block's inventory
+	 * @param containerName The name to be displayed inside of the container.
+	 */
+	public ScrollableContainer(int syncId, AreaAwareSlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text containerName)
 	{
 		super(null, syncId);
 		this.inventory = inventory;
@@ -41,13 +50,38 @@ public class ScrollableContainer extends Container
 			{
 				int slot = x + 9 * y;
 				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) unsortedToSortedSlotMap[slot] = slot;
-				addSlot(slotFactory.create(inventory, slot, 8 + x * 18, yPos));
+				addSlot(slotFactory.create(inventory, "CHEST", slot, 8 + x * 18, yPos));
 			}
 		}
-		for (int y = 0; y < 3; ++y) for (int x = 0; x < 9; ++x) addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 103 + y * 18 + int_3));
-		for (int x = 0; x < 9; ++x) addSlot(new Slot(playerInventory, x, 8 + x * 18, 161 + int_3));
+		for (int y = 0; y < 3; ++y)
+			for (int x = 0; x < 9; ++x)
+				addSlot(slotFactory.create(playerInventory, "PLAYER", x + y * 9 + 9, 8 + x * 18, 103 + y * 18 + int_3));
+		for (int x = 0; x < 9; ++x)
+			addSlot(slotFactory.create(playerInventory, "HOTBAR", x, 8 + x * 18, 161 + int_3));
 	}
 
+	/**
+	 * Creates a ScrollableContainer allowing for custom slots to be defined. (replaces all slots in container)
+	 *
+	 * @param syncId Sync ID
+	 * @param slotFactory The method which returns new (custom) slot objects.
+	 * @param playerInventory The player's inventory
+	 * @param inventory The block's inventory
+	 * @param containerName The name to be displayed inside of the container.
+	 */
+	public ScrollableContainer(int syncId, SlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text containerName)
+	{
+		this(syncId, ((inventory1, area, index, x, y) -> slotFactory.create(inventory1, index, x, y)), playerInventory, inventory, containerName);
+	}
+
+	/**
+	 * Creates a ScrollableContainer.
+	 *
+	 * @param syncId Sync ID
+	 * @param playerInventory The player's inventory
+	 * @param inventory The block's inventory
+	 * @param containerName The name to be displayed inside of the container.
+	 */
 	public ScrollableContainer(int syncId, PlayerInventory playerInventory, Inventory inventory, Text containerName)
 	{
 		this(syncId, Slot::new, playerInventory, inventory, containerName);
