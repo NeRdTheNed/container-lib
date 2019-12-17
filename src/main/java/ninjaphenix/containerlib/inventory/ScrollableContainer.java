@@ -7,7 +7,7 @@ import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import ninjaphenix.containerlib.misc.SlotAccessor;
@@ -17,13 +17,13 @@ import java.util.Arrays;
 public class ScrollableContainer extends Container
 {
 	private final Text containerName;
-	private final SidedInventory inventory;
+	private final Inventory inventory;
 	private final int rows;
 	private final int realRows;
 	@Environment(EnvType.CLIENT) private String searchTerm = "";
 	@Environment(EnvType.CLIENT) private Integer[] unsortedToSortedSlotMap;
 
-	public ScrollableContainer(int syncId, PlayerInventory playerInventory, SidedInventory inventory, Text containerName)
+	public ScrollableContainer(int syncId, SlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text containerName)
 	{
 		super(null, syncId);
 		this.inventory = inventory;
@@ -41,14 +41,19 @@ public class ScrollableContainer extends Container
 			{
 				int slot = x + 9 * y;
 				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) unsortedToSortedSlotMap[slot] = slot;
-				addSlot(new Slot(inventory, slot, 8 + x * 18, yPos));
+				addSlot(slotFactory.create(inventory, slot, 8 + x * 18, yPos));
 			}
 		}
 		for (int y = 0; y < 3; ++y) for (int x = 0; x < 9; ++x) addSlot(new Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 103 + y * 18 + int_3));
 		for (int x = 0; x < 9; ++x) addSlot(new Slot(playerInventory, x, 8 + x * 18, 161 + int_3));
 	}
 
-	public SidedInventory getInventory() { return inventory; }
+	public ScrollableContainer(int syncId, PlayerInventory playerInventory, Inventory inventory, Text containerName)
+	{
+		this(syncId, Slot::new, playerInventory, inventory, containerName);
+	}
+
+	public Inventory getInventory() { return inventory; }
 
 	@Environment(EnvType.CLIENT)
 	public int getRows() { return realRows; }
