@@ -67,16 +67,22 @@ runClient {
 
 tasks.withType(JavaCompile) { options.setEncoding("UTF-8") }
 
-tasks.getByName("githubRelease") {
-	dependsOn(tasks.getByName("build"))
+if(project.hasProperty("github_api_key"))
+{
+	tasks.getByName("githubRelease") {
+		dependsOn(tasks.getByName("build"))
+	}
+
+	githubRelease {
+		token = project.github_api_key
+		owner "ninjaphenix"
+		repo "container-lib"
+		tagName "v${project.mod_version}"
+		targetCommitish project.minecraft_version
+		releaseAssets remapJar.destinationDirectory.getAsFile().get().listFiles((java.io.FilenameFilter) {dir, name -> name.contains(project.mod_version)})
+		overwrite true
+	}
 }
 
-githubRelease {
-	token = project.hasProperty("github_api_key") ? project.getProperty("github_api_key") : ""
-	owner "ninjaphenix"
-	repo "container-lib"
-	tagName "v${project.mod_version}"
-	targetCommitish project.minecraft_version
-	releaseAssets remapJar.destinationDirectory.getAsFile().get().listFiles((java.io.FilenameFilter) {dir, name -> name.contains(project.mod_version)})
-	overwrite true
-}
+
+
