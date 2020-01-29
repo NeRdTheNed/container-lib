@@ -26,11 +26,11 @@ public final class ContainerLibREIPlugin implements REIPluginV0
 	@SuppressWarnings("ConstantConditions")
 	public void registerBounds(DisplayHelper displayHelper)
 	{
-		displayHelper.getBaseBoundsHandler().registerExclusionZones(ScrollableScreen.class, isOnRightSide ->
+		displayHelper.getBaseBoundsHandler().registerExclusionZones(ScrollableScreen.class, () ->
 		{
 			final ScrollableScreen screen = (ScrollableScreen) MinecraftClient.getInstance().currentScreen;
 			final ArrayList<Rectangle> rv = new ArrayList<>(1);
-			if (isOnRightSide && screen.hasScrollbar()) rv.add(new Rectangle(screen.getLeft() + 172, screen.getTop(), 22, 132));
+			if (screen.hasScrollbar()) { rv.add(new Rectangle(screen.getLeft() + 172, screen.getTop(), 22, 132)); }
 			return rv;
 		});
 	}

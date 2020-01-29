@@ -5,8 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.gui.screen.ingame.ContainerProvider;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -15,10 +15,10 @@ import ninjaphenix.containerlib.client.gui.widget.SearchTextFieldWidget;
 import ninjaphenix.containerlib.inventory.ScrollableContainer;
 
 @Environment(EnvType.CLIENT)
-public class ScrollableScreen extends AbstractContainerScreen<ScrollableContainer> implements ContainerProvider<ScrollableContainer>
+public class ScrollableScreen extends ContainerScreen<ScrollableContainer> implements ContainerProvider<ScrollableContainer>
 {
 	private static final Identifier BASE_TEXTURE = new Identifier("textures/gui/container/generic_54.png");
-	private static final Identifier WIDGETS_TEXTURE = new Identifier("expandedstorage", "textures/gui/container/widgets.png");
+	private static final Identifier WIDGETS_TEXTURE = new Identifier("ninjaphenix-container-lib", "textures/gui/container/widgets.png");
 	private final int displayedRows;
 	private final int totalRows;
 	private int topRow;
@@ -33,7 +33,7 @@ public class ScrollableScreen extends AbstractContainerScreen<ScrollableContaine
 		totalRows = container.getRows();
 		topRow = 0;
 		displayedRows = hasScrollbar() ? 6 : totalRows;
-		if (hasScrollbar() && !FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) containerWidth += 22;
+		if (hasScrollbar() && !FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) { containerWidth += 22; }
 		containerHeight = 114 + displayedRows * 18;
 		progress = 0;
 		container.setSearchTerm("");
@@ -57,7 +57,7 @@ public class ScrollableScreen extends AbstractContainerScreen<ScrollableContaine
 		searchBox.setEditableColor(16777215);
 		searchBox.setChangedListener(str ->
 		{
-			if (str.equals(searchBoxOldText)) return;
+			if (str.equals(searchBoxOldText)) { return; }
 			container.setSearchTerm(str);
 			progress = 0;
 			topRow = 0;
@@ -121,14 +121,14 @@ public class ScrollableScreen extends AbstractContainerScreen<ScrollableContaine
 	{
 		boolean left_up_down = mouseX < left || mouseY < top || mouseY > top + height;
 		boolean right = mouseX > left + width;
-		if (hasScrollbar()) right = (right && mouseY > top + 132) || mouseX > left + width + 18;
+		if (hasScrollbar()) { right = (right && mouseY > top + 132) || mouseX > left + width + 18; }
 		return left_up_down || right;
 	}
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY)
 	{
-		if (!dragging) return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		if (!dragging) { return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY); }
 		progress = MathHelper.clamp((mouseY - y - 25.5) / 90, 0, 1);
 		setTopRow((int) (progress * (totalRows - 6)));
 		return true;
@@ -153,7 +153,7 @@ public class ScrollableScreen extends AbstractContainerScreen<ScrollableContaine
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button)
 	{
-		if (dragging && button == 0) dragging = false;
+		if (dragging && button == 0) { dragging = false; }
 		return super.mouseReleased(mouseX, mouseY, button);
 	}
 
@@ -189,7 +189,7 @@ public class ScrollableScreen extends AbstractContainerScreen<ScrollableContaine
 	@Override
 	public boolean charTyped(char character, int keyCode)
 	{
-		if (searchBox.isFocused()) return searchBox.charTyped(character, keyCode);
+		if (searchBox.isFocused()) { return searchBox.charTyped(character, keyCode); }
 		return super.charTyped(character, keyCode);
 	}
 
