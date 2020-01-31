@@ -119,7 +119,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	@Override
 	protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int mouseButton)
 	{
-		boolean left_up_down = mouseX < left || mouseY < top || mouseY > top + height;
+		final boolean left_up_down = mouseX < left || mouseY < top || mouseY > top + height;
 		boolean right = mouseX > left + width;
 		if (hasScrollbar()) { right = (right && mouseY > top + 132) || mouseX > left + width + 18; }
 		return left_up_down || right;
@@ -196,8 +196,8 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	@Override
 	public void resize(MinecraftClient client, int width, int height)
 	{
-		String text = searchBox.getText();
-		boolean focused = searchBox.isFocused();
+		final String text = searchBox.getText();
+		final boolean focused = searchBox.isFocused();
 		super.resize(client, width, height);
 		searchBox.setText(text);
 		if (focused)

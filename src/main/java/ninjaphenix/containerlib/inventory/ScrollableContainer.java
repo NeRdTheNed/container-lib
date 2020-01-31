@@ -55,11 +55,9 @@ public class ScrollableContainer extends Container
 		}
 		for (int y = 0; y < 3; ++y)
 		{
-			for (int x = 0; x < 9; ++x)
-			{ addSlot(slotFactory.create(playerInventory, "PLAYER", x + y * 9 + 9, 8 + x * 18, 103 + y * 18 + int_3)); }
+			for (int x = 0; x < 9; ++x) { addSlot(slotFactory.create(playerInventory, "PLAYER", x + y * 9 + 9, 8 + x * 18, 103 + y * 18 + int_3)); }
 		}
-		for (int x = 0; x < 9; ++x)
-		{ addSlot(slotFactory.create(playerInventory, "HOTBAR", x, 8 + x * 18, 161 + int_3)); }
+		for (int x = 0; x < 9; ++x) { addSlot(slotFactory.create(playerInventory, "HOTBAR", x, 8 + x * 18, 161 + int_3)); }
 	}
 
 	/**
@@ -122,10 +120,10 @@ public class ScrollableContainer extends Container
 		else if (termChanged) { Arrays.sort(unsortedToSortedSlotMap); }
 		for (Integer slotID : unsortedToSortedSlotMap)
 		{
-			Slot slot = slots.get(slotID);
-			int y = (index / 9) - offset;
-			((SlotAccessor) slot).setX(8 + 18 * (index % 9));
-			((SlotAccessor) slot).setY((y >= rows || y < 0) ? -2000 : 18 + 18 * y);
+			final SlotAccessor accessor = (SlotAccessor) slots.get(slotID);
+			final int y = (index / 9) - offset;
+			accessor.setX(8 + 18 * (index % 9));
+			accessor.setY((y >= rows || y < 0) ? -2000 : 18 + 18 * y);
 			index++;
 		}
 	}
