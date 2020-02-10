@@ -69,7 +69,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 				searchBoxOldText = str;
 			});
 			setFocused(box);
-			box.setFocusUnlocked(true);
+			box.changeFocus(true);
 		}
 		else { searchBox = Optional.empty(); }
 	}
