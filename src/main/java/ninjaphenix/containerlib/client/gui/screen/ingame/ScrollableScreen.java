@@ -54,7 +54,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 		super.init();
 		if (hasScrollbar())
 		{
-			searchBox = Optional.of(addButton(new SearchTextFieldWidget(font, x + 82, y + 127, 80, 8, "")));
+			searchBox = Optional.of(new SearchTextFieldWidget(font, x + 82, y + 127, 80, 8, ""));
 			final SearchTextFieldWidget box = searchBox.get();
 			box.setMaxLength(50);
 			box.setHasBorder(false);
@@ -68,8 +68,9 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 				topRow = 0;
 				searchBoxOldText = str;
 			});
-			setFocused(box);
+			this.children.add(box);
 			box.changeFocus(true);
+			this.setInitialFocus(box);
 		}
 		else { searchBox = Optional.empty(); }
 	}
