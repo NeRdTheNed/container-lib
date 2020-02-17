@@ -1,8 +1,10 @@
 plugins {
-	id "fabric-loom" version "0.2.6-SNAPSHOT"
+	//id "fabric-loom" version "0.2.6-SNAPSHOT"
 	id "java"
 	id "com.github.breadmoirai.github-release" version "2.2.10"
 }
+
+apply plugin: "fabric-loom"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_1_8

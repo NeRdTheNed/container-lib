@@ -1,14 +1,10 @@
-package ninjaphenix.containerlib.misc;
-
+package ninjaphenix.containerlib.mixins;
 
 import net.minecraft.container.Slot;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-/**
- * {@link Slot}'s can be casted to {@link SlotAccessor} to allow their xPosition and yPosition to be set.
- *
- * @author NinjaPhenix
- * @since 0.0.1
- */
+@Mixin(Slot.class)
 public interface SlotAccessor
 {
 	/**
@@ -16,6 +12,7 @@ public interface SlotAccessor
 	 *
 	 * @param x The new X position
 	 */
+	@Accessor("xPosition")
 	void setX(int x);
 
 	/**
@@ -23,5 +20,6 @@ public interface SlotAccessor
 	 *
 	 * @param y The new Y position
 	 */
+	@Accessor("yPosition")
 	void setY(int y);
 }
