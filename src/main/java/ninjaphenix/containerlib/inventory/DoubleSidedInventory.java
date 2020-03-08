@@ -54,16 +54,32 @@ public class DoubleSidedInventory implements SidedInventory
 	public boolean canPlayerUseInv(PlayerEntity player) { return first.canPlayerUseInv(player) && second.canPlayerUseInv(player); }
 
 	@Override
-	public void clear() { first.clear(); second.clear(); }
+	public void clear()
+	{
+		first.clear();
+		second.clear();
+	}
 
 	@Override
-	public void markDirty() { first.markDirty(); second.markDirty(); }
+	public void markDirty()
+	{
+		first.markDirty();
+		second.markDirty();
+	}
 
 	@Override
-	public void onInvOpen(PlayerEntity player) { first.onInvOpen(player); second.onInvOpen(player); }
+	public void onInvOpen(PlayerEntity player)
+	{
+		first.onInvOpen(player);
+		second.onInvOpen(player);
+	}
 
 	@Override
-	public void onInvClose(PlayerEntity player) { first.onInvClose(player); second.onInvClose(player); }
+	public void onInvClose(PlayerEntity player)
+	{
+		first.onInvClose(player);
+		second.onInvClose(player);
+	}
 
 	public boolean isPart(SidedInventory inventory) { return first == inventory || second == inventory; }
 

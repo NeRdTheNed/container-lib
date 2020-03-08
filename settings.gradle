@@ -2,7 +2,7 @@ pluginManagement {
 	repositories {
 		jcenter()
 		maven {
-			name = 'FabricMC'
+			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
 		maven {
@@ -10,26 +10,5 @@ pluginManagement {
 			url = 'https://maven.modmuss50.me/'
 		}
 		gradlePluginPortal()
-	}
-}
-buildscript {
-	repositories {
-		jcenter()
-		maven {
-			name = "Fabric"
-			url = "https://maven.fabricmc.net/"
-		}
-		maven {
-			name = "Forge"
-			url = "https://files.minecraftforge.net/maven/"
-		}
-		maven {
-			name = "Jitpack"
-			url = "https://jitpack.io/"
-		}
-	}
-	dependencies {
-		//Sin² Edition Loom
-		classpath 'com.github.Chocohead:fabric-loom:e5d69cb'
 	}
 }

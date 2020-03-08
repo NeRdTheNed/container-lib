@@ -54,7 +54,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 		super.init();
 		if (hasScrollbar())
 		{
-			searchBox = Optional.of(new SearchTextFieldWidget(font, x + 82, y + 127, 80, 8, ""));
+			searchBox = Optional.of(new SearchTextFieldWidget(text, x + 82, y + 127, 80, 8, ""));
 			final SearchTextFieldWidget box = searchBox.get();
 			box.setMaxLength(50);
 			box.setHasBorder(false);
@@ -90,8 +90,8 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	@Override
 	protected void drawForeground(int mouseX, int mouseY)
 	{
-		font.draw(title.asFormattedString(), 8, 6, 4210752);
-		font.draw(playerInventory.getDisplayName().asFormattedString(), 8, containerHeight - 94, 4210752);
+		text.draw(title.asFormattedString(), 8, 6, 4210752);
+		text.draw(playerInventory.getDisplayName().asFormattedString(), 8, containerHeight - 94, 4210752);
 	}
 
 	@Override
@@ -99,17 +99,17 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	protected void drawBackground(float delta, int mouseX, int mouseY)
 	{
 		RenderSystem.color4f(1, 1, 1, 1);
-		minecraft.getTextureManager().bindTexture(BASE_TEXTURE);
+		client.getTextureManager().bindTexture(BASE_TEXTURE);
 		int left = (width - containerWidth) / 2;
 		int top = (height - containerHeight) / 2;
-		blit(left, top, 0, 0, containerWidth, displayedRows * 18 + 17);
-		blit(left, top + displayedRows * 18 + 17, 0, 126, containerWidth, 96);
+		drawRect(left, top, 0, 0, containerWidth, displayedRows * 18 + 17);
+		drawRect(left, top + displayedRows * 18 + 17, 0, 126, containerWidth, 96);
 		if (hasScrollbar())
 		{
-			minecraft.getTextureManager().bindTexture(WIDGETS_TEXTURE);
-			blit(left + 172, top, 0, 0, 22, 132);
-			blit(left + 174, (int) (top + 18 + 91 * progress), 22, 0, 12, 15);
-			blit(left + 79, top + 126, 34, 0, 90, 11);
+			client.getTextureManager().bindTexture(WIDGETS_TEXTURE);
+			drawRect(left + 172, top, 0, 0, 22, 132);
+			drawRect(left + 174, (int) (top + 18 + 91 * progress), 22, 0, 12, 15);
+			drawRect(left + 79, top + 126, 34, 0, 90, 11);
 		}
 		searchBox.ifPresent(box -> box.render(mouseX, mouseY, delta));
 	}
@@ -183,7 +183,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	{
 		if (keyCode == 256)
 		{
-			minecraft.player.closeContainer();
+			client.player.closeContainer();
 			return true;
 		}
 		if (searchBox.isPresent())
@@ -191,7 +191,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 			final SearchTextFieldWidget box = searchBox.get();
 			if (!box.isFocused())
 			{
-				if (minecraft.options.keyChat.matchesKey(keyCode, scanCode))
+				if (client.options.keyChat.matchesKey(keyCode, scanCode))
 				{
 					box.changeFocus(true);
 					setFocused(box);
@@ -226,7 +226,11 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 			final boolean focused = box.isFocused();
 			super.resize(client, width, height);
 			box.setText(text);
-			if (focused) { box.changeFocus(true); setFocused(box); }
+			if (focused)
+			{
+				box.changeFocus(true);
+				setFocused(box);
+			}
 		}
 		else { super.resize(client, width, height); }
 	}

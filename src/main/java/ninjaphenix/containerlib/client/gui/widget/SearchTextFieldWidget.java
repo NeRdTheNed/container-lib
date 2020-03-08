@@ -19,14 +19,22 @@ public class SearchTextFieldWidget extends TextFieldWidget
 	@Override
 	public boolean mouseClicked(double x, double y, int button)
 	{
-		if (isVisible() && button == 1 && clicked(x, y)) { setText(""); return true; }
+		if (isVisible() && button == 1 && clicked(x, y))
+		{
+			setText("");
+			return true;
+		}
 		return super.mouseClicked(x, y, button);
 	}
 
 	@Override
 	public boolean charTyped(char character, int keyCode)
 	{
-		if (ignoreNextChar) { ignoreNextChar = false; return false; }
+		if (ignoreNextChar)
+		{
+			ignoreNextChar = false;
+			return false;
+		}
 		return super.charTyped(character, keyCode);
 	}
 

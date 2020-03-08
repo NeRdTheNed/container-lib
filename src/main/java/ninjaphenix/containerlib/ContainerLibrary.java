@@ -18,6 +18,9 @@ import ninjaphenix.containerlib.inventory.ScrollableContainer;
 public final class ContainerLibrary implements ModInitializer, ClientModInitializer
 {
 	public static final Identifier CONTAINER_ID = new Identifier("ninjaphenix-container-lib", "container");
+	public static final ContainerLibrary INSTANCE = new ContainerLibrary();
+
+	private ContainerLibrary() {}
 
 	/**
 	 * Open's a modded container which block implements InventoryProvider.
@@ -35,10 +38,6 @@ public final class ContainerLibrary implements ModInitializer, ClientModInitiali
 			buffer.writeText(containerName);
 		});
 	}
-
-	public static final ContainerLibrary INSTANCE = new ContainerLibrary();
-
-	private ContainerLibrary() {}
 
 	@Override
 	public void onInitialize()
