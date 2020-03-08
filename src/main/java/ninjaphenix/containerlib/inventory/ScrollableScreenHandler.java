@@ -3,18 +3,18 @@ package ninjaphenix.containerlib.inventory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import ninjaphenix.containerlib.mixins.SlotAccessor;
 
 import java.util.Arrays;
 
-public class ScrollableContainer extends Container
+public class ScrollableScreenHandler extends ScreenHandler
 {
 	private final Text containerName;
 	private final Inventory inventory;
@@ -30,13 +30,13 @@ public class ScrollableContainer extends Container
 	 * @param slotFactory The method which returns new (custom) slot objects.
 	 * @param playerInventory The player's inventory
 	 * @param inventory The block's inventory
-	 * @param containerName The name to be displayed inside of the container.
+	 * @param handleName The name to be displayed inside of the container.
 	 */
-	public ScrollableContainer(int syncId, AreaAwareSlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text containerName)
+	public ScrollableScreenHandler(int syncId, AreaAwareSlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text handleName)
 	{
 		super(null, syncId);
 		this.inventory = inventory;
-		this.containerName = containerName;
+		this.containerName = handleName;
 		realRows = inventory.getInvSize() / 9;
 		rows = Math.min(realRows, 6);
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) { unsortedToSortedSlotMap = new Integer[realRows * 9]; }
@@ -69,7 +69,7 @@ public class ScrollableContainer extends Container
 	 * @param inventory The block's inventory
 	 * @param containerName The name to be displayed inside of the container.
 	 */
-	public ScrollableContainer(int syncId, SlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text containerName)
+	public ScrollableScreenHandler(int syncId, SlotFactory slotFactory, PlayerInventory playerInventory, Inventory inventory, Text containerName)
 	{
 		this(syncId, ((inventory1, area, index, x, y) -> slotFactory.create(inventory1, index, x, y)), playerInventory, inventory, containerName);
 	}
@@ -82,7 +82,7 @@ public class ScrollableContainer extends Container
 	 * @param inventory The block's inventory
 	 * @param containerName The name to be displayed inside of the container.
 	 */
-	public ScrollableContainer(int syncId, PlayerInventory playerInventory, Inventory inventory, Text containerName)
+	public ScrollableScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, Text containerName)
 	{
 		this(syncId, Slot::new, playerInventory, inventory, containerName);
 	}

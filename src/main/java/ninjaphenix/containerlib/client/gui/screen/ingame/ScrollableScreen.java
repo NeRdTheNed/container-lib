@@ -5,19 +5,19 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerProvider;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
+import net.minecraft.client.gui.screen.ingame.ScreenWithHandler;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import ninjaphenix.containerlib.client.gui.widget.SearchTextFieldWidget;
-import ninjaphenix.containerlib.inventory.ScrollableContainer;
+import ninjaphenix.containerlib.inventory.ScrollableScreenHandler;
 
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class ScrollableScreen extends ContainerScreen<ScrollableContainer> implements ContainerProvider<ScrollableContainer>
+public class ScrollableScreen extends ScreenWithHandler<ScrollableScreenHandler> implements ScreenHandlerProvider<ScrollableScreenHandler>
 {
 	private static final Identifier BASE_TEXTURE = new Identifier("textures/gui/container/generic_54.png");
 	private static final Identifier WIDGETS_TEXTURE = new Identifier("ninjaphenix-container-lib", "textures/gui/container/widgets.png");
@@ -29,21 +29,21 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	private Optional<SearchTextFieldWidget> searchBox;
 	private String searchBoxOldText;
 
-	public ScrollableScreen(ScrollableContainer container, PlayerInventory playerInventory, Text containerTitle)
+	public ScrollableScreen(ScrollableScreenHandler container, PlayerInventory playerInventory, Text containerTitle)
 	{
 		super(container, playerInventory, containerTitle);
 		totalRows = container.getRows();
 		topRow = 0;
 		displayedRows = hasScrollbar() ? 6 : totalRows;
-		if (hasScrollbar() && !FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) { containerWidth += 22; }
-		containerHeight = 114 + displayedRows * 18;
+		if (hasScrollbar() && !FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) { backgroundWidth += 22; }
+		backgroundHeight = 114 + displayedRows * 18;
 		progress = 0;
 		container.setSearchTerm("");
 		searchBoxOldText = "";
 	}
 
 	@SuppressWarnings("ConstantConditions")
-	public static ScrollableScreen createScreen(ScrollableContainer container)
+	public static ScrollableScreen createMenu(ScrollableScreenHandler container)
 	{
 		return new ScrollableScreen(container, MinecraftClient.getInstance().player.inventory, container.getDisplayName());
 	}
@@ -63,7 +63,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 			box.setChangedListener(str ->
 			{
 				if (str.equals(searchBoxOldText)) { return; }
-				container.setSearchTerm(str);
+				handler.setSearchTerm(str);
 				progress = 0;
 				topRow = 0;
 				searchBoxOldText = str;
@@ -91,7 +91,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	protected void drawForeground(int mouseX, int mouseY)
 	{
 		text.draw(title.asFormattedString(), 8, 6, 4210752);
-		text.draw(playerInventory.getDisplayName().asFormattedString(), 8, containerHeight - 94, 4210752);
+		text.draw(playerInventory.getDisplayName().asFormattedString(), 8, backgroundHeight - 94, 4210752);
 	}
 
 	@Override
@@ -100,10 +100,10 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	{
 		RenderSystem.color4f(1, 1, 1, 1);
 		client.getTextureManager().bindTexture(BASE_TEXTURE);
-		int left = (width - containerWidth) / 2;
-		int top = (height - containerHeight) / 2;
-		drawRect(left, top, 0, 0, containerWidth, displayedRows * 18 + 17);
-		drawRect(left, top + displayedRows * 18 + 17, 0, 126, containerWidth, 96);
+		int left = (width - backgroundWidth) / 2;
+		int top = (height - backgroundHeight) / 2;
+		drawRect(left, top, 0, 0, backgroundWidth, displayedRows * 18 + 17);
+		drawRect(left, top + displayedRows * 18 + 17, 0, 126, backgroundWidth, 96);
 		if (hasScrollbar())
 		{
 			client.getTextureManager().bindTexture(WIDGETS_TEXTURE);
@@ -174,7 +174,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	private void setTopRow(int row)
 	{
 		topRow = MathHelper.clamp(row, 0, totalRows - 6);
-		container.updateSlotPositions(topRow, false);
+		handler.updateSlotPositions(topRow, false);
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class ScrollableScreen extends ContainerScreen<ScrollableContainer> imple
 	{
 		if (keyCode == 256)
 		{
-			client.player.closeContainer();
+			client.player.closeHandledScreen();
 			return true;
 		}
 		if (searchBox.isPresent())
