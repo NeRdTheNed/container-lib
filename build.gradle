@@ -11,7 +11,7 @@ java {
 }
 
 minecraft {
-    refmapName = "${project.mod_id}-refmap.json"
+	refmapName = "${project.mod_id}-refmap.json"
 }
 
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -22,51 +22,50 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${minecraft_version}")
-    mappings("net.fabricmc:yarn:${minecraft_version}+${yarn_version}:v2")
-    modImplementation("net.fabricmc:fabric-loader:${loader_version}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
+	minecraft("com.mojang:minecraft:${minecraft_version}")
+	mappings("net.fabricmc:yarn:${minecraft_version}+${yarn_version}:v2")
+	modImplementation("net.fabricmc:fabric-loader:${loader_version}")
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
 
-    modImplementation("me.shedaniel:RoughlyEnoughItems:${rei_version}")
-    {
-        exclude(group: "net.fabricmc", module: "fabric-loader")
-        exclude(group: "net.fabricmc.fabric-api")
-        exclude(group: "io.github.prospector", module: "modmenu")
-    }
+	modImplementation("me.shedaniel:RoughlyEnoughItems:${rei_version}")
+			{
+				exclude(group: "net.fabricmc", module: "fabric-loader")
+				exclude(group: "net.fabricmc.fabric-api")
+				exclude(group: "io.github.prospector", module: "modmenu")
+			}
 
-    modImplementation("io.github.prospector:modmenu:${modmenu_version}")
-    {
-        exclude (group: "net.fabricmc", module: "fabric-loader")
-        exclude (group: "net.fabricmc.fabric-api")
-    }
+	modImplementation("io.github.prospector:modmenu:${modmenu_version}")
+			{
+				exclude(group: "net.fabricmc", module: "fabric-loader")
+				exclude(group: "net.fabricmc.fabric-api")
+			}
 
-    compileOnly("org.checkerframework:checker-qual:3.0.1")
+	compileOnly("org.checkerframework:checker-qual:3.0.1")
 }
 
 processResources {
-    inputs.property "version", project.version
-    from(sourceSets.main.resources.srcDirs) {
-        include("fabric.mod.json")
-        expand("version": version)
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude("fabric.mod.json")
-    }
+	inputs.property "version", project.version
+	from(sourceSets.main.resources.srcDirs) {
+		include("fabric.mod.json")
+		expand("version": version)
+	}
+	from(sourceSets.main.resources.srcDirs) {
+		exclude("fabric.mod.json")
+	}
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
+	archiveClassifier.set("sources")
+	from sourceSets.main.allSource
 }
 
 jar { from("LICENSE") }
 
 runClient {
-    args = ["--username", "Dev"]
+	args = ["--username", "Dev"]
 }
 
 tasks.withType(JavaCompile) { options.setEncoding("UTF-8") }
-
 
 // configure the maven publication
 publishing {

@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import ninjaphenix.containerlib.client.gui.screen.ingame.ScrollableScreen;
 import ninjaphenix.containerlib.inventory.ScrollableContainer;
 
-@EnvironmentInterface(value=EnvType.CLIENT, itf=ClientModInitializer.class)
+@EnvironmentInterface(value = EnvType.CLIENT, itf = ClientModInitializer.class)
 public final class ContainerLibrary implements ModInitializer, ClientModInitializer
 {
 	public static final Identifier CONTAINER_ID = new Identifier("ninjaphenix-container-lib", "container");
@@ -29,10 +29,10 @@ public final class ContainerLibrary implements ModInitializer, ClientModInitiali
 	 */
 	public static void openContainer(PlayerEntity player, BlockPos pos, Text containerName)
 	{
-		ContainerProviderRegistry.INSTANCE.openContainer(CONTAINER_ID, player, (packetByteBuf) ->
+		ContainerProviderRegistry.INSTANCE.openContainer(CONTAINER_ID, player, (buffer) ->
 		{
-			packetByteBuf.writeBlockPos(pos);
-			packetByteBuf.writeText(containerName);
+			buffer.writeBlockPos(pos);
+			buffer.writeText(containerName);
 		});
 	}
 
@@ -43,15 +43,17 @@ public final class ContainerLibrary implements ModInitializer, ClientModInitiali
 	@Override
 	public void onInitialize()
 	{
-		ContainerProviderRegistry.INSTANCE.registerFactory(CONTAINER_ID, (syncId, identifier, player, buf) ->
+		ContainerProviderRegistry.INSTANCE.registerFactory(CONTAINER_ID, (syncId, identifier, player, buffer) ->
 		{
-			final BlockPos pos = buf.readBlockPos();
-			final Text name = buf.readText();
+			final BlockPos pos = buffer.readBlockPos();
+			final Text name = buffer.readText();
 			final World world = player.getEntityWorld();
 			final BlockState state = world.getBlockState(pos);
 			final Block block = state.getBlock();
 			if (block instanceof InventoryProvider)
+			{
 				return new ScrollableContainer(syncId, player.inventory, ((InventoryProvider) block).getInventory(state, world, pos), name);
+			}
 			return null;
 		});
 	}
